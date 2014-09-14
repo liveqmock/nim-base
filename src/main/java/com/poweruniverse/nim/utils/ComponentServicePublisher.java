@@ -7,7 +7,6 @@ import java.util.List;
 import javax.xml.ws.Endpoint;
 
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
@@ -35,6 +34,7 @@ public class ComponentServicePublisher {
 			}
 			if(cmpCfgDoc!=null){
 				Element cmpCfgEl = cmpCfgDoc.getRootElement();//services XML:ROOT-EL
+				@SuppressWarnings("unchecked")
 				List<Element> wsEls = (List<Element>)cmpCfgEl.elements("service");
 				for(Element wsEl : wsEls){
 					String wsName = wsEl.attributeValue("service-name");
