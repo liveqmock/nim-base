@@ -7,8 +7,10 @@
     <artifactId>nim</artifactId>
     <version>1.0</version>
   </parent>
+    <groupId>com.poweruniverse</groupId>
   <artifactId>nim-base</artifactId>
   <name>nim-base</name>
+    <version>1.0</version>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
