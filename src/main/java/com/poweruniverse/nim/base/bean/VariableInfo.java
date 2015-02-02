@@ -1,4 +1,4 @@
-package com.poweruniverse.nim.bean;
+package com.poweruniverse.nim.base.bean;
 
 /**
  * 系统参数

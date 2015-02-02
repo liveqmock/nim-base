@@ -2,8 +2,6 @@ package com.poweruniverse.nim.message;
 
 import net.sf.json.JSONObject;
 
-import com.poweruniverse.nim.interfaces.message.ReturnI;
-
 
 /**
  * 方法调用的返回结果
@@ -11,22 +9,22 @@ import com.poweruniverse.nim.interfaces.message.ReturnI;
  * @author Administrator
  *
  */
-public class JsonReturn implements ReturnI {
+public class JSONResult implements Result {
 	private static final long serialVersionUID = -7111514299949856465L;
 	
 	private Boolean success = true;
 	private String errorMsg = null;
 	private JSONObject data = null;
 	
-	public JsonReturn(){
+	public JSONResult(){
 	}
 	
-	public JsonReturn(String errorMsg ){
+	public JSONResult(String errorMsg ){
 		this.success = false;
 		this.errorMsg = errorMsg;
 	}
 
-	public JsonReturn(JSONObject dataParam){
+	public JSONResult(JSONObject dataParam){
 		this.success = true;
 		if(dataParam!=null){
 			for(Object key:dataParam.keySet()){
@@ -35,7 +33,7 @@ public class JsonReturn implements ReturnI {
 		}
 	}
 	
-	public JsonReturn(String key,Object value){
+	public JSONResult(String key,Object value){
 		this.success = true;
 		put(key, value);
 	}

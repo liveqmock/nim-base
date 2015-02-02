@@ -1,4 +1,4 @@
-package com.poweruniverse.nim.interfaces.message;
+package com.poweruniverse.nim.message;
 
 
 
@@ -8,10 +8,8 @@ package com.poweruniverse.nim.interfaces.message;
  * @author Administrator
  *
  */
-public interface ReturnI extends java.io.Serializable {
+public interface Result extends java.io.Serializable {
 	
-	
-
 	public boolean isSuccess();
 	public void setSuccess(boolean success);
 
