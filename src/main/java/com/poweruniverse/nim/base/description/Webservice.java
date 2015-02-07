@@ -1,8 +1,9 @@
 package com.poweruniverse.nim.base.description;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Method;
+
+import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
+
 
 /**
  * webservice服务的配置信息
@@ -12,13 +13,11 @@ import java.util.Set;
 public abstract class Webservice {
 	private String name = null;
 	private Component component = null;
+	private Object instance = null;
 	
-	private Map<String,WebserviceMethod> methodMap = new HashMap<String,WebserviceMethod>();
-	
-	
-	public Webservice(Component component,String name) {
+	public Webservice(Component component,String wsName) {
 		this.component = component;
-		this.name = name;
+		this.name = wsName;
 	}	
 	
 	public Component getComponent() {
@@ -29,22 +28,24 @@ public abstract class Webservice {
 		return name;
 	}	
 	
-	public void addMethod(WebserviceMethod mtd){
-		methodMap.put(mtd.getName(),mtd);
+	public abstract boolean isLocalService();
+
+	public String getWebserviceURL(String ip,String port) {
+		return "http://"+ip+":"+port+"/ws/"+component.getName()+"/"+name+"";
 	}
 	
-	public WebserviceMethod getMethod(String mtdName){
-		return methodMap.get(mtdName);
-	}
-	
-	public boolean containsMethod(String mtdName){
-		return methodMap.containsKey(mtdName);
-	}
-	
-	public Set<String> getMethodKeySet(){
-		return methodMap.keySet();
+	public String getWebserviceWSDL(String ip,String port) {
+		return "http://"+ip+":"+port+"/ws/"+component.getName()+"/"+name+"?wsdl";
 	}
 
-	public abstract boolean isLocalService();
+	public Object getInstance() {
+		return instance;
+	}
+
+	public void setInstance(Object instance) {
+		this.instance = instance;
+	}
+
+	public abstract Method getMethod(String mtdName) throws Exception ;
 
 }

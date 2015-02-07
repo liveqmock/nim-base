@@ -1,10 +1,10 @@
-package com.poweruniverse.nim.message;
+package com.poweruniverse.nim.base.message;
 
 import com.poweruniverse.nim.base.bean.UserInfo;
 
 
 
-public class InvokeResult extends JSONResult {
+public class InvokeResult extends JSONMessageResult {
 	private static final long serialVersionUID = -7111514299949856465L;
 
 	private String invokeComponentName = null;//发出请求服务的组件名称

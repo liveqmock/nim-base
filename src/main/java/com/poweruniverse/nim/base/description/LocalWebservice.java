@@ -1,5 +1,7 @@
 package com.poweruniverse.nim.base.description;
 
+import java.lang.reflect.Method;
+
 
 /**
  * 本地webservice服务的配置信息
@@ -21,5 +23,29 @@ public class LocalWebservice extends Webservice{
 	public boolean isLocalService() {
 		return true;
 	}
+	
+	public String getLocalWebserviceURL() throws Exception{
+		Application app = Application.getInstance();
+		return this.getWebserviceURL(app.getIp(),app.getWebservicePort());
+	}
+	
+	public String getLocalWebserviceWSDL() throws Exception{
+		Application app = Application.getInstance();
+		return this.getWebserviceWSDL(app.getIp(),app.getWebservicePort());
+	}
 
+	public Method getMethod(String mtdName) throws Exception{
+		Class<?> sClass = Class.forName(serviceClass);
+		Method method=null;
+		if(sClass!=null){
+			//检查类中是否存在此名称的方法
+			for(Method m:sClass.getMethods()){
+				if(m.getName().equals(mtdName)){
+					method = m;
+					break;
+				}
+			}
+		}
+		return method;
+	}
 }

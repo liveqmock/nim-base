@@ -21,18 +21,10 @@ public abstract class Component {
 	/**
 	 * 
 	 */
-	private Map<String,Webservice> webserviceMap = new HashMap<String,Webservice>();
+	protected Map<String,Webservice> webserviceMap = new HashMap<String,Webservice>();
 	
 	public String getName() {
 		return name;
-	}
-	
-	public void addWebservice(Webservice ws){
-		webserviceMap.put(ws.getName(),ws);
-	}
-	
-	public Webservice getWebservice(String wsName){
-		return webserviceMap.get(wsName);
 	}
 	
 	public boolean containsWebservice(String wsName){
@@ -42,7 +34,11 @@ public abstract class Component {
 	public Set<String> getWebserviceKeySet(){
 		return webserviceMap.keySet();
 	}
+	
+	public abstract Webservice getWebservice(String wsName);
 
 	public abstract boolean isLocalComponent();
 
+
+	
 }

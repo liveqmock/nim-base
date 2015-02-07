@@ -4,7 +4,7 @@
  * 更改所生成文件模板为
  * 窗口 > 首选项 > Java > 代码生成 > 代码和注释
  */
-package com.poweruniverse.nim.utils;
+package com.poweruniverse.nim.base.utils;
 import java.security.Key;
 import java.security.Security;
 

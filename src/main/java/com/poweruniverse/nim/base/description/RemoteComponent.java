@@ -39,5 +39,14 @@ public class RemoteComponent extends Component {
 	public boolean isLocalComponent() {
 		return false;
 	}
+	
+	public void addWebservice(RemoteWebservice ws){
+		webserviceMap.put(ws.getName(),ws);
+	}
+	
+	public RemoteWebservice getWebservice(String wsName){
+		return (RemoteWebservice)webserviceMap.get(wsName);
+	}
+
 
 }

@@ -11,23 +11,41 @@ import net.sf.json.JSONObject;
  * 单实例模式
  */
 public class Application {
-	private Application instance = null;
+	private static Application instance = null;
 
 	private String name = null; //当前系统的名称
+	private String title = null; //页面默认标题
+	private String jdkPath = null; //jdk路径
+	private String srcPath = null; //源文件路径
 	private String ip = null;   //当前服务器ip
 	private String port = null;   //当前服务器port
 	private String webservicePort = null;//当前服务器webservice端口
+	private String webserviceSrc = null;//开发者webservice client Src路径
 
-	private static Map<String,Component> componentMap = new HashMap<String,Component>();
+	private String loginPage = null;
+	private String homePage = null;
 
-	public Application getInstance(){
+	private Map<String,Component> componentMap = new HashMap<String,Component>();
+
+	public static Application init(String name,String title,String srcPath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
 		if(instance == null){
 			//读取参数 创建实例
 			instance = new Application(); 
-//			instance.name = name;
-//			instance.ip = ip;
-//			instance.port = port;
-//			instance.webservicePort = webservicePort;
+			instance.name = name;
+			instance.title = title;
+			instance.srcPath = srcPath;
+			instance.jdkPath = jdkPath;
+			instance.ip = ip;
+			instance.port = port;
+			instance.webservicePort = webservicePort;
+			instance.webserviceSrc = webserviceSrc;
+		}
+		return instance;
+	}
+	
+	public static Application getInstance() throws Exception{
+		if(instance == null){
+			throw new Exception("在使用Application的getInstance方法前，必须调用init方法进行初始化！");
 		}
 		return instance;
 	}
@@ -47,6 +65,17 @@ public class Application {
 	public String getName() {
 		return name;
 	}
+	public String getTitle() {
+		return title;
+	}
+
+	public String getSrcPath() {
+		return srcPath;
+	}
+
+	public String getJdkPath() {
+		return jdkPath;
+	}
 
 	public String getIp() {
 		return ip;
@@ -59,20 +88,38 @@ public class Application {
 	public String getWebservicePort() {
 		return webservicePort;
 	}
+	public String getLoginPage() {
+		return loginPage;
+	}
 
-	public static void addComponent(Component cmp){
+	public void setLoginPage(String loginPage) {
+		this.loginPage = loginPage;
+	}
+
+	public String getHomePage() {
+		return homePage;
+	}
+
+	public void setHomePage(String homePage) {
+		this.homePage = homePage;
+	}
+
+
+//--------------------------------------------------------
+
+	public void addComponent(Component cmp){
 		componentMap.put(cmp.getName(),cmp);
 	}
 	
-	public static Component getComponent(String cmpName){
+	public Component getComponent(String cmpName){
 		return componentMap.get(cmpName);
 	}
 	
-	public static boolean containsComponent(String cmpName){
+	public boolean containsComponent(String cmpName){
 		return componentMap.containsKey(cmpName);
 	}
 	
-	public static Set<String> getComponentKeySet(){
+	public Set<String> getComponentKeySet(){
 		return componentMap.keySet();
 	}
 
@@ -104,6 +151,10 @@ public class Application {
 	}
 	public static int getLoggedUserCount() {
 		return loggedUserCount;
+	}
+
+	public String getWebserviceSrc() {
+		return webserviceSrc;
 	}
 
 

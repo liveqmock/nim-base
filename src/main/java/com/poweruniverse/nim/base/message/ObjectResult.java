@@ -1,47 +1,34 @@
-package com.poweruniverse.nim.message;
+package com.poweruniverse.nim.base.message;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.json.JSONObject;
 
 
 /**
  * 方法调用的返回结果
- * json类型
  * @author Administrator
  *
  */
-public class JSONResult implements Result {
+public class ObjectResult implements Result {
 	private static final long serialVersionUID = -7111514299949856465L;
 	
 	private Boolean success = true;
 	private String errorMsg = null;
-	private JSONObject data = null;
+	private Map<String,Object> data = new HashMap<String,Object>();
 	
-	public JSONResult(){
+	public ObjectResult(){
+		this.success = true;
+		this.errorMsg = null;
 	}
-	
-	public JSONResult(String errorMsg ){
+
+	public ObjectResult(String errorMsg ){
 		this.success = false;
 		this.errorMsg = errorMsg;
 	}
 
-	public JSONResult(JSONObject dataParam){
-		this.success = true;
-		if(dataParam!=null){
-			for(Object key:dataParam.keySet()){
-				put(key, dataParam.get(key));
-			}
-		}
-	}
-	
-	public JSONResult(String key,Object value){
-		this.success = true;
-		put(key, value);
-	}
-	
-	public void put(Object key,Object value){
-		if(this.data == null){
-			this.data = new JSONObject();
-		}
+	public void put(String key,Object value){
 		this.data.put(key, value);
 	}
 	
@@ -75,17 +62,8 @@ public class JSONResult implements Result {
 		if(!success){
 			ret.put("errorMsg", errorMsg);
 		}
-		if(data!=null){
-			for(Object key : data.keySet()){
-				ret.put(key, data.get(key));
-			}
-		}
 		return ret.toString();
 	}
 
-	@Override
-	public void put(String key, Object value) {
-		data.put(key, value);
-	}
 
 }

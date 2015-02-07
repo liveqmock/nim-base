@@ -2,7 +2,7 @@ package com.poweruniverse.nim.base.bean;
 
 import java.util.Calendar;
 
-import com.poweruniverse.nim.utils.Encrypt;
+import com.poweruniverse.nim.base.utils.Encrypt;
 
 
 public class UserInfo {
@@ -35,6 +35,11 @@ public class UserInfo {
 	public String getKey(){
 		return this.key;
 	}
+	
+	public String getPassword(){
+		return this.password;
+	}
+
 	
 	public String getCodeIdentifier(){
 		return this.codeIdentifier;

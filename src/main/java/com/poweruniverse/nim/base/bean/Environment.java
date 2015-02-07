@@ -23,7 +23,9 @@ public class Environment {
 		this.authUser = this.loginUser;
 		this.clientIp = ip;
 		
-		Application.loggedUserAdd();
+		if(user!=null){
+			Application.loggedUserAdd();
+		}
 	}
 
 	/**
@@ -32,27 +34,38 @@ public class Environment {
 	public void userLogout(){
 		if(loginUser!=null){
 			Application.onlineUserSubtract();
-			loginUser = null;
-			authUser = null;
+			this.loginUser = null;
+			this.authUser = null;
+		}
+	}
+
+	public void userLogin(UserInfo loginUser){
+		if(loginUser!=null){
+			Application.loggedUserAdd();
+			this.loginUser = loginUser;
+			this.authUser = loginUser;
 		}
 	}
 
 	public UserInfo getLoginUser() {
-		return loginUser;
+		return this.loginUser;
 	}
 
 	public UserInfo getAuthUser() {
-		return authUser;
+		return this.authUser;
 	}
 
-
+	/**
+	 * 模拟其他用户的权限
+	 * @param authUser
+	 */
 	public void setAuthUser(UserInfo authUser) {
 		this.authUser = authUser;
 	}
 
 
 	public String getClientIp() {
-		return clientIp;
+		return this.clientIp;
 	}
 
 }
