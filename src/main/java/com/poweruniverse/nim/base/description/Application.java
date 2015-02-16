@@ -15,8 +15,9 @@ public class Application {
 
 	private String name = null; //当前系统的名称
 	private String title = null; //页面默认标题
-	private String jdkPath = null; //jdk路径
 	private String srcPath = null; //源文件路径
+	private String modulePath = null; //源文件路径
+	private String jdkPath = null; //jdk路径
 	private String ip = null;   //当前服务器ip
 	private String port = null;   //当前服务器port
 	private String webservicePort = null;//当前服务器webservice端口
@@ -27,13 +28,14 @@ public class Application {
 
 	private Map<String,Component> componentMap = new HashMap<String,Component>();
 
-	public static Application init(String name,String title,String srcPath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
+	public static Application init(String name,String title,String srcPath,String modulePath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
 		if(instance == null){
 			//读取参数 创建实例
 			instance = new Application(); 
 			instance.name = name;
 			instance.title = title;
 			instance.srcPath = srcPath;
+			instance.modulePath = modulePath;
 			instance.jdkPath = jdkPath;
 			instance.ip = ip;
 			instance.port = port;
@@ -155,6 +157,10 @@ public class Application {
 
 	public String getWebserviceSrc() {
 		return webserviceSrc;
+	}
+
+	public String getModulePath() {
+		return modulePath;
 	}
 
 

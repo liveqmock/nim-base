@@ -13,15 +13,11 @@ import java.util.Set;
 public class RemoteWebservice extends Webservice{
 	private String clientClass = null;
 	private String clientServiceClass = null;
-	private String remoteIp = null;
-	private String remoteWebservicePort = null;
 
-	public RemoteWebservice(RemoteComponent component,String wsName,String ip,String wsPort,String clientClass,String clientServiceClass) {
+	public RemoteWebservice(RemoteComponent component,String wsName,String clientClass,String clientServiceClass) {
 		super(component,wsName);
 		this.clientClass = clientClass;
 		this.clientServiceClass = clientServiceClass;
-		this.remoteIp = ip;
-		this.remoteWebservicePort = wsPort;
 	}	
 
 	public String getClientClass() {
@@ -37,11 +33,13 @@ public class RemoteWebservice extends Webservice{
 	}
 
 	public String getRemoteWebserviceURL() {
-		return this.getWebserviceURL(remoteIp,remoteWebservicePort);
+		RemoteComponent rc = (RemoteComponent)this.getComponent();
+		return this.getWebserviceURL(rc.getIp(),rc.getWebservicePort());
 	}
 	
 	public String getRemoteWebserviceWSDL() {
-		return this.getWebserviceWSDL(remoteIp,remoteWebservicePort);
+		RemoteComponent rc = (RemoteComponent)this.getComponent();
+		return this.getWebserviceWSDL(rc.getIp(),rc.getWebservicePort());
 	}
 	
 	public Method getMethod(String mtdName) throws Exception{

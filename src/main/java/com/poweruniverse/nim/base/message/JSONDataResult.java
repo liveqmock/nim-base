@@ -19,6 +19,7 @@ public class JSONDataResult implements Result {
 	private int start = 0;
 	private int limit = 0;
 	private JSONObject params = new JSONObject();
+	private JSONObject meta = new JSONObject();
 
 
 	private JSONArray rows = new JSONArray();
@@ -28,12 +29,13 @@ public class JSONDataResult implements Result {
 		this.errorMsg = errorMsg;
 	}
 
-	public JSONDataResult(JSONArray rows,int totalCount,int start,int limit){
+	public JSONDataResult(JSONArray rows,int totalCount,int start,int limit,JSONObject meta){
 		this.success = true;
 		this.rows = rows;
 		this.totalCount = totalCount;
 		this.start = start;
 		this.limit = limit;
+		this.meta = meta;
 	}
 	
 	public void addRow(JSONObject row){
@@ -75,11 +77,16 @@ public class JSONDataResult implements Result {
 
 	@Override
 	public String toString() {
-		return success
-				?("success:"+totalCount+" of "+totalCount+"(start:"+start+",limit:"+limit+")")
-				:("failure:"+errorMsg);
+		JSONObject info = new JSONObject();
+		info.put("success", success);
+		info.put("errorMsg", errorMsg);
+		info.put("totalCount", totalCount);
+		info.put("start", start);
+		info.put("limit", limit);
+		info.put("rows", rows);
+		info.put("meta", meta);
+		info.put("params", params);
+		return info.toString();
 	}
-
-
 
 }

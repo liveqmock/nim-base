@@ -1,19 +1,16 @@
 package com.poweruniverse.nim.base.message;
 
-import java.lang.reflect.Method;
-
 import net.sf.json.JSONObject;
 
 import com.poweruniverse.nim.base.bean.UserInfo;
 import com.poweruniverse.nim.base.description.Application;
 import com.poweruniverse.nim.base.description.Component;
-import com.poweruniverse.nim.base.description.LocalWebservice;
-import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.description.Webservice;
 
 
 public class InvokeEnvelope{
-	
+	private static int maxid = 0;
+	private int id = -1;
 	private Component invokeComponent = null;//发出请求服务的组件
 	private UserInfo invokeUser = null;//发出请求服务的用户
 	
@@ -24,6 +21,7 @@ public class InvokeEnvelope{
 	
 	public InvokeEnvelope(String sourceCmpName,UserInfo user,String targetCmpName,String targetWsName,String targetMethodName,JSONObject argument) throws Exception {
 		super();
+		this.id = ++maxid;
 		if(!Application.getInstance().containsComponent(sourceCmpName)){
 			throw new Exception("in InvokeEnvelope constuctor:源组件"+sourceCmpName+"不存在！");
 		}
@@ -54,7 +52,7 @@ public class InvokeEnvelope{
 	/**
 	 * 取得要调用的方法名称
 	 */
-	public String getTargetMethodName() throws Exception{
+	public String getTargetMethodName(){
 		return this.targetMethodName;
 	}
 
@@ -72,6 +70,19 @@ public class InvokeEnvelope{
 
 	public Webservice getTargetWebservice() {
 		return targetWebservice;
+	}
+
+	@Override
+	public String toString() {
+		String userInfo = "";
+		if(this.getInvokeUser()!=null){
+			userInfo = this.getInvokeUser().getDengLuDH()+"("+this.getInvokeUser().getYongHuMC()+")";
+		}
+		return this.id+" 用户 "+userInfo+"从"+this.getInvokeComponent().getName()+" 请求"+this.getTargetWebservice()+"."+this.getTargetMethodName()+"服务，参数:"+this.getParams();
+	}
+
+	public int getId() {
+		return id;
 	}	
 
 

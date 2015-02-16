@@ -6,47 +6,62 @@ import com.poweruniverse.nim.base.utils.Encrypt;
 
 
 public class UserInfo {
-	private String code;
-	private String name;
-	private String password;
+	private Integer yongHuDM;
+	private String yongHuMC;
+	private String dengLuDH;
+	private String dengLuMM;
+	
 	private String key;
-	private String codeIdentifier;
-	private String pwdIdentifier;
+	private String dengLuDHIdentifier;
+	private String dengLuMMIdentifier;
 	
-	public UserInfo(String yongHuDH, String yongHuMC,String dengLuMM) {
+	private String ip;//用户登录的ip地址
+	
+	public UserInfo(Integer yongHuDM, String yongHuMC, String dengLuDH,String dengLuMM, String ip) {
 		super();
-		this.code = yongHuDH;
-		this.name = yongHuMC;
-		this.password = dengLuMM;
+		this.yongHuDM = yongHuDM;
+		this.yongHuMC = yongHuMC;
+		this.dengLuDH = dengLuDH;
+		this.dengLuMM = dengLuMM;
 		
+		this.ip = ip;
+
 		this.key = ""+Calendar.getInstance().getTimeInMillis();
-		this.codeIdentifier = Encrypt.encrypt(this.code, this.key);
-		this.pwdIdentifier = Encrypt.encrypt(this.password, this.key);
+		this.dengLuDHIdentifier = Encrypt.encrypt(this.dengLuDH, this.key);
+		this.dengLuMMIdentifier = Encrypt.encrypt(this.dengLuMM, this.key);
 	}
 
-	public String getCode() {
-		return this.code;
+	public Integer getYongHuDM() {
+		return yongHuDM;
 	}
 
-	public String getName() {
-		return this.name;
+	public String getYongHuMC() {
+		return yongHuMC;
 	}
 
-	public String getKey(){
-		return this.key;
-	}
-	
-	public String getPassword(){
-		return this.password;
+	public String getDengLuDH() {
+		return dengLuDH;
 	}
 
-	
-	public String getCodeIdentifier(){
-		return this.codeIdentifier;
+	public String getDengLuMM() {
+		return dengLuMM;
 	}
 
-	public String getPwdIdentifier(){
-		return this.pwdIdentifier;
+	public String getKey() {
+		return key;
 	}
+
+	public String getDengLuDHIdentifier() {
+		return dengLuDHIdentifier;
+	}
+
+	public String getDengLuMMIdentifier() {
+		return dengLuMMIdentifier;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
 
 }

@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 
 import javax.xml.ws.Endpoint;
+
+import com.poweruniverse.nim.base.bean.UserInfo;
 
 import net.sf.json.JSONObject;
 
@@ -57,11 +60,13 @@ public class LocalComponent extends Component {
 				try{
 					String url  =  "http://"+app.getIp()+":"+app.getWebservicePort()+"/ws/"+this.getName()+"/"+wsName;
 					System.out.println("	为组件("+this.getName()+")发布webservice("+wsName+")...到 "+url+"...");
-					Object serviceInstance = Class.forName(webservice.getServiceClass()).newInstance();
+					Constructor<?> serviceConstructor = Class.forName(webservice.getServiceClass()).getConstructor(new Class[]{UserInfo.class});   
+		            Object serviceInstance = serviceConstructor.newInstance(new Object[]{null});
+		            
 					Endpoint.publish(url,serviceInstance);
 					System.out.println("	为组件("+this.getName()+")发布webservice("+wsName+")...成功");
 					
-					if(app.getIp().equals("127.0.0.1") && app.getIp().equals("8080")){
+					if(app.getIp().equals("127.0.0.1") && app.getPort().equals("8080")){
 						//在本地8080端口启动时 认为是开发模式
 		        		generateClientCode(url,wsName);
 		        	}
@@ -81,7 +86,9 @@ public class LocalComponent extends Component {
     	try {
         	Application app = Application.getInstance();
     		//如果jdkPath webserviceSrc参数不为空且有效 且client目录为空
-			File dataTransWSClientFilePath = new File(app.getWebserviceSrc()+"com/poweruniverse/nim/wsclient/"+this.getName()+"/"+wsName+"/");
+           	String comPath = this.getName().replaceAll("-", "/");
+           	String comPackage = this.getName().replaceAll("-", ".");
+			File dataTransWSClientFilePath = new File(app.getWebserviceSrc()+"com/poweruniverse/"+comPath+"/wsclient/"+wsName+"/");
 			if(!dataTransWSClientFilePath.exists() || dataTransWSClientFilePath.list(
 				new FilenameFilter(){
 					public boolean accept(File dir, String name) {
@@ -92,7 +99,7 @@ public class LocalComponent extends Component {
 				//不存在的话 
 				//使用jdk的wsimport 生成client代码
 				String ls_1;
-				String cmdString = "cmd /c "+app.getJdkPath()+"bin/wsimport -p "+"com.poweruniverse.nim.wsclient."+this.getName()+"."+wsName+" -keep "+wsUrl+"?wsdl";
+				String cmdString = "cmd /c "+app.getJdkPath()+"bin/wsimport -p "+"com.poweruniverse."+comPackage+".wsclient."+wsName+" -keep "+wsUrl+"?wsdl";
 				
 				Process process2 = Runtime.getRuntime().exec(cmdString, null, new File(app.getWebserviceSrc()));
 				BufferedReader bufferedReader2 = new BufferedReader(new InputStreamReader(process2.getInputStream()));

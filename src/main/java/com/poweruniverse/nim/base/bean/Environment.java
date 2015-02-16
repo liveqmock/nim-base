@@ -15,13 +15,13 @@ public class Environment {
 	//当前用户 模拟权限
 	private UserInfo authUser = null;
 	//当前用户 客户端地址
-	private String clientIp = null;
+//	private String clientIp = null;
 	
-	public Environment(UserInfo user,String ip) {
+	public Environment(UserInfo user) {
 		super();
 		this.loginUser = user;
 		this.authUser = this.loginUser;
-		this.clientIp = ip;
+//		this.clientIp = ip;
 		
 		if(user!=null){
 			Application.loggedUserAdd();
@@ -64,8 +64,8 @@ public class Environment {
 	}
 
 
-	public String getClientIp() {
-		return this.clientIp;
-	}
+//	public String getClientIp() {
+//		return this.clientIp;
+//	}
 
 }

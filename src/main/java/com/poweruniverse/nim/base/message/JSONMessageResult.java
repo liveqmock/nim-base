@@ -25,12 +25,16 @@ public class JSONMessageResult implements Result {
 	}
 
 	public JSONMessageResult(String key,Object val ){
-		this.success = false;
+		this.success = true;
 		this.info.put(key, val);
 	}
 	
 	public void put(String key,Object val ){
 		this.info.put(key, val);
+	}
+
+	public Object get(String key){
+		return this.info.get(key);
 	}
 
 	public boolean isSuccess() {
@@ -50,7 +54,9 @@ public class JSONMessageResult implements Result {
 	}
 
 	public String toString() {
-		return success?("true"+info.toString()):("false:"+errorMsg);
+		info.put("success", success);
+		info.put("errorMsg", errorMsg);
+		return info.toString();
 	}
 
 }
