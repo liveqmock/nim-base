@@ -1,5 +1,6 @@
 package com.poweruniverse.nim.base.bean;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public abstract class BaseJavaDatasource {
@@ -11,6 +12,6 @@ public abstract class BaseJavaDatasource {
 	 * 	rows:[{},{},...]
 	 * }
 	 */
-	public abstract JSONObject getData(JSONObject params,int start,int limit);
+	public abstract JSONObject getData(JSONArray filters,JSONObject params,int start,int limit);
 
 }

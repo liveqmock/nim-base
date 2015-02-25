@@ -12,6 +12,7 @@ import net.sf.json.JSONObject;
  */
 public class Application {
 	private static Application instance = null;
+	private String contextPath = null;//当前程序运行路径
 
 	private String name = null; //当前系统的名称
 	private String title = null; //页面默认标题
@@ -28,10 +29,11 @@ public class Application {
 
 	private Map<String,Component> componentMap = new HashMap<String,Component>();
 
-	public static Application init(String name,String title,String srcPath,String modulePath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
+	public static Application init(String contextPath,String name,String title,String srcPath,String modulePath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
 		if(instance == null){
 			//读取参数 创建实例
 			instance = new Application(); 
+			instance.contextPath = contextPath;
 			instance.name = name;
 			instance.title = title;
 			instance.srcPath = srcPath;
@@ -161,6 +163,10 @@ public class Application {
 
 	public String getModulePath() {
 		return modulePath;
+	}
+
+	public String getContextPath() {
+		return contextPath;
 	}
 
 
