@@ -28,6 +28,11 @@ public class ObjectResult implements Result {
 		this.errorMsg = errorMsg;
 	}
 
+	public ObjectResult(String key,Object value){
+		this.success = true;
+		this.data.put(key, value);
+	}
+
 	public void put(String key,Object value){
 		this.data.put(key, value);
 	}
