@@ -11,6 +11,7 @@ import java.util.Date;
 import javax.jws.WebParam;
 import javax.xml.ws.BindingProvider;
 
+import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -116,6 +117,9 @@ public class InvokeUtils {
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private static Object getObjectWithCorrectValue(Object value,Class<?> type) throws IllegalArgumentException {
+		if(value == null || value instanceof JSONNull){
+			return null;
+		}
 		if(!value.getClass().equals(type)){
 			if(type.equals(String.class)){
 				value = value.toString();

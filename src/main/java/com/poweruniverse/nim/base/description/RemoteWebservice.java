@@ -1,9 +1,6 @@
 package com.poweruniverse.nim.base.description;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * webservice服务的配置信息
