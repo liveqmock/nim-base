@@ -66,9 +66,13 @@ public class LocalComponent extends Component {
 					Endpoint.publish(url,serviceInstance);
 					System.out.println("	为组件("+this.getName()+")发布webservice("+wsName+")...成功");
 					
-					if(app.getIp().equals("127.0.0.1") && app.getPort().equals("8080")){
+					if(app.getIp().equals("127.0.0.1") && app.getPort().equals("8080") && app.getJdkPath()!=null){
 						//在本地8080端口启动时 认为是开发模式
-		        		generateClientCode(url,wsName);
+						File jdkDir = new File(app.getJdkPath());
+						if(jdkDir.exists()){
+							//应该只在基础平台开发者本地生成client源码
+							generateClientCode(url,wsName);
+						}
 		        	}
 				}catch (Exception e){
 					System.err.println("	为组件("+this.getName()+")发布webservice("+wsName+")...失败");
