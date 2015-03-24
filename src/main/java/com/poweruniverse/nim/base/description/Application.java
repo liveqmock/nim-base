@@ -16,35 +16,42 @@ public class Application {
 
 	private String name = null; //当前系统的名称
 	private String title = null; //页面默认标题
-	private String srcPath = null; //源文件路径
 	private String modulePath = null; //源文件路径
-	private String jdkPath = null; //jdk路径
 	private String ip = null;   //当前服务器ip
 	private String port = null;   //当前服务器port
 	private String webservicePort = null;//当前服务器webservice端口
-	private String webserviceSrc = null;//开发者webservice client Src路径
 
 	private String loginPage = null;
 	private String homePage = null;
+	
+	private String mode = "work";
+	private String srcPath = null; //源文件路径
+	private String jdkPath = null; //jdk路径
+
 
 	private Map<String,Component> componentMap = new HashMap<String,Component>();
 
-	public static Application init(String contextPath,String name,String title,String srcPath,String modulePath,String jdkPath,String ip,String port,String webservicePort,String webserviceSrc){
+	public static Application init(String contextPath,String name,String title,String mode,String modulePath,String ip,String port,String webservicePort){
 		if(instance == null){
 			//读取参数 创建实例
 			instance = new Application(); 
 			instance.contextPath = contextPath;
 			instance.name = name;
 			instance.title = title;
-			instance.srcPath = srcPath;
+			instance.mode = mode;
+			
 			instance.modulePath = modulePath;
-			instance.jdkPath = jdkPath;
+			
 			instance.ip = ip;
 			instance.port = port;
 			instance.webservicePort = webservicePort;
-			instance.webserviceSrc = webserviceSrc;
 		}
 		return instance;
+	}
+	
+	public static void setDevelopConfig(String srcPath,String jdkPath){
+		instance.srcPath = srcPath;
+		instance.jdkPath = jdkPath;
 	}
 	
 	public static Application getInstance() throws Exception{
@@ -157,16 +164,28 @@ public class Application {
 		return loggedUserCount;
 	}
 
-	public String getWebserviceSrc() {
-		return webserviceSrc;
-	}
-
 	public String getModulePath() {
-		return modulePath;
+		return this.modulePath;
 	}
 
 	public String getContextPath() {
-		return contextPath;
+		return this.contextPath;
+	}
+
+	public boolean isDevelopMode() {
+		return !"work".equals(this.mode);
+	}
+
+	public boolean isPlateformMode() {
+		return "plateform".equals(this.mode);
+	}
+
+	public String getMode() {
+		return this.mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
 	}
 
 
