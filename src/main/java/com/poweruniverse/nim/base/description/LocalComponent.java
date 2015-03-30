@@ -8,9 +8,11 @@ import java.lang.reflect.Constructor;
 
 import javax.xml.ws.Endpoint;
 
-import com.poweruniverse.nim.base.bean.UserInfo;
+import org.apache.commons.io.FileUtils;
 
 import net.sf.json.JSONObject;
+
+import com.poweruniverse.nim.base.bean.UserInfo;
 
 /**
  * 对某个local组件的描述
@@ -68,14 +70,14 @@ public class LocalComponent extends Component {
 				
 				try{
 					String url  =  "http://"+app.getIp()+":"+app.getWebservicePort()+"/ws/"+this.getName()+"/"+wsName;
-					System.out.println("	为组件("+this.getName()+")发布webservice("+wsName+")...到 "+url+"...");
+					System.out.print("	为组件("+this.getName()+")发布webservice("+wsName+")...到 "+url+"...");
 					Constructor<?> serviceConstructor = Class.forName(webservice.getServiceClass()).getConstructor(new Class[]{UserInfo.class});   
 		            Object serviceInstance = serviceConstructor.newInstance(new Object[]{null});
 		            
 					Endpoint.publish(url,serviceInstance);
-					System.out.println("	为组件("+this.getName()+")发布webservice("+wsName+")...成功");
+					System.out.println("成功");
 					
-					//根据组件级别和当前系统运行模式，确定是否需要生成webservice 客户端源码
+					//根据组件级别和当前系统运行模式，确定是否可以生成webservice 客户端源码
 					if("127.0.0.1".equals(app.getIp()) && "8080".equals(app.getPort())){
 						if(("plateform".equals(this.type) && app.isPlateformMode()) || ("application".equals(this.type) && app.isDevelopMode())){
 							generateClientCode(url,wsName);
@@ -83,7 +85,7 @@ public class LocalComponent extends Component {
 					}
 					
 				}catch (Exception e){
-					System.err.println("	为组件("+this.getName()+")发布webservice("+wsName+")...失败");
+					System.err.println("失败");
 					e.printStackTrace();
 				}
 			}
@@ -121,9 +123,8 @@ public class LocalComponent extends Component {
 					}
 				}
 			).length==0){
-				//目标目录下不存在任何java文件的话 
+				//目标目录下不存在任何java文件的话 使用jdk的wsimport 生成client代码
 				System.out.println("	本地服务组件("+wsName+")的webservice客户端源码不存在，准备生成 "+this.clientSrcPath+"..."+this.clientPackage);
-				//使用jdk的wsimport 生成client代码
 				String ls_1;
 				String cmdString = "cmd /c "+Application.getInstance().getJdkPath()+"bin/wsimport -p "+this.clientPackage+"."+wsName+" -keep "+wsUrl+"?wsdl";
 				
@@ -133,6 +134,10 @@ public class LocalComponent extends Component {
 					System.out.println(ls_1);
 				}
 				process2.waitFor();
+				//将类路径中的组件配置文件 拷贝到目标目录
+				File targetFile = new File(this.clientSrcPath+this.name+".component.xml");
+				FileUtils.copyInputStreamToFile(LocalComponent.class.getResourceAsStream("/"+this.name+".component.xml"), targetFile);
+
 			}else if(Application.getInstance().isDevelopMode()){
 				System.out.println("	本地服务组件("+wsName+")的webservice客户端源码已存在，未重新生成 "+cmpWSClientSrcPathFile.getPath());
 			}
@@ -140,5 +145,8 @@ public class LocalComponent extends Component {
 			e.printStackTrace();
 		}
     }
+    
+    
+
 
 }

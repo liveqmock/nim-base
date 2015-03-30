@@ -1,11 +1,9 @@
-package com.poweruniverse.nim.base.webservice;
+package com.poweruniverse.nim.baseClass;
 
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
 
 import com.poweruniverse.nim.base.bean.UserInfo;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
@@ -13,6 +11,7 @@ import com.poweruniverse.nim.base.message.JSONDataResult;
 import com.poweruniverse.nim.base.message.Result;
 import com.poweruniverse.nim.base.utils.Encrypt;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
+import com.poweruniverse.nim.base.utils.NimJSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 
@@ -53,7 +52,7 @@ public abstract class BasePlateformWebservice {
 					Result result = InvokeUtils.invokeService(invokeEnvelope);
 					if(result.isSuccess()){
 						JSONDataResult jResult = (JSONDataResult)result;
-						JSONObject row = jResult.getRows().getJSONObject(0);
+						NimJSONObject row = jResult.getRows().getJSONObject(0);
 						yongHuDM = row.getInt("yongHuDM");
 					}else if(forceExists){
 						throw new Exception(result.getErrorMsg());

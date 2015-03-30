@@ -3,6 +3,9 @@ package com.poweruniverse.nim.base.message;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import com.poweruniverse.nim.base.utils.NimJSONArray;
+import com.poweruniverse.nim.base.utils.NimJSONObject;
+
 
 /**
  * 方法调用的返回结果
@@ -22,14 +25,14 @@ public class JSONDataResult implements Result {
 	private JSONObject meta = new JSONObject();
 
 
-	private JSONArray rows = new JSONArray();
+	private NimJSONArray rows = new NimJSONArray();
 	
 	public JSONDataResult(String errorMsg ){
 		this.success = false;
 		this.errorMsg = errorMsg;
 	}
 
-	public JSONDataResult(JSONArray rows,int totalCount,int start,int limit,JSONObject meta){
+	public JSONDataResult(NimJSONArray rows,int totalCount,int start,int limit,JSONObject meta){
 		this.success = true;
 		this.rows = rows;
 		this.totalCount = totalCount;
@@ -42,7 +45,7 @@ public class JSONDataResult implements Result {
 		this.rows.add(row);
 	}
 	
-	public JSONArray getRows(){
+	public NimJSONArray getRows(){
 		return this.rows;
 	}
 	
@@ -77,7 +80,7 @@ public class JSONDataResult implements Result {
 
 	@Override
 	public String toString() {
-		JSONObject info = new JSONObject();
+		NimJSONObject info = new NimJSONObject();
 		info.put("success", success);
 		info.put("errorMsg", errorMsg);
 		info.put("totalCount", totalCount);

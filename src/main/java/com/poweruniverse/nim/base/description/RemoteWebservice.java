@@ -1,6 +1,10 @@
 package com.poweruniverse.nim.base.description;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.net.URL;
+
+import com.poweruniverse.nim.base.utils.InvokeUtils;
 
 /**
  * webservice服务的配置信息
@@ -8,17 +12,17 @@ import java.lang.reflect.Method;
  *
  */
 public class RemoteWebservice extends Webservice{
-	private String clientClass = null;
+	private String serviceClass = null;
 	private String clientServiceClass = null;
 
 	public RemoteWebservice(RemoteComponent component,String wsName,String clientClass,String clientServiceClass) {
 		super(component,wsName);
-		this.clientClass = clientClass;
+		this.serviceClass = clientClass;
 		this.clientServiceClass = clientServiceClass;
 	}	
 
-	public String getClientClass() {
-		return clientClass;
+	public String getServiceClass() {
+		return serviceClass;
 	}
 
 	public String getClientServiceClass() {
@@ -40,7 +44,7 @@ public class RemoteWebservice extends Webservice{
 	}
 	
 	public Method getMethod(String mtdName) throws Exception{
-		Class<?> wsclientClass = Class.forName(clientClass);
+		Class<?> wsclientClass = Class.forName(serviceClass);
 		
 		Method method=null;
 		if(wsclientClass!=null){
@@ -55,4 +59,27 @@ public class RemoteWebservice extends Webservice{
 		return method;
 	}
 
+	//取得远程wenservice服务接口类的实现
+	public Object getServiceInstance(){
+		Object servicePortInstance = null;
+		try {
+			RemoteComponent rc = (RemoteComponent)this.getComponent();
+			
+			String simpleClassName = clientServiceClass.substring(clientServiceClass.lastIndexOf(".")+1);
+
+			String wsClientClassName = rc.getClientPackage()+"."+this.getName()+"."+simpleClassName+"Service";
+			
+			Constructor<?> wsClientClassConstructor = Class.forName(wsClientClassName).getConstructor(new Class[]{URL.class});
+			Object[] args = new Object[1];
+			args[0] = new URL(RemoteWebservice.class.getResource("."),this.getRemoteWebserviceWSDL() );
+			Object serviceInstance = wsClientClassConstructor.newInstance(args);
+			//使用getXXXPort方法 得到webservice代理实例
+			Method getServicePortMethod = serviceInstance.getClass().getMethod("get"+simpleClassName+"Port", new Class[]{});
+			
+			servicePortInstance = getServicePortMethod.invoke(serviceInstance, new Object[]{});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return servicePortInstance;
+	}
 }

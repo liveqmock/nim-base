@@ -1,6 +1,6 @@
 package com.poweruniverse.nim.base.message;
 
-import net.sf.json.JSONObject;
+import com.poweruniverse.nim.base.utils.NimJSONObject;
 
 
 /**
@@ -14,7 +14,7 @@ public class JSONMessageResult implements Result {
 	
 	private Boolean success = true;
 	private String errorMsg = null;
-	private JSONObject info = new JSONObject();
+	private NimJSONObject info = new NimJSONObject();
 	
 	public JSONMessageResult(){
 	}
@@ -35,6 +35,10 @@ public class JSONMessageResult implements Result {
 
 	public Object get(String key){
 		return this.info.get(key);
+	}
+	
+	public boolean has(String key){
+		return this.info.has(key);
 	}
 
 	public boolean isSuccess() {

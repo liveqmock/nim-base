@@ -21,7 +21,7 @@ import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.Result;
-import com.poweruniverse.nim.base.webservice.BasePlateformWebservice;
+import com.poweruniverse.nim.baseClass.BasePlateformWebservice;
 
 public class InvokeUtils {
 	private static Logger logger = null;

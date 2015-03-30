@@ -48,4 +48,16 @@ public class LocalWebservice extends Webservice{
 		}
 		return method;
 	}
+	
+    //取得本地wenservice服务类的实现
+  	public Object getServiceInstance(){
+  		Object servicePortInstance = null;
+  		try {
+  			Class<?> wsClass = Class.forName(this.getServiceClass());
+  			servicePortInstance = wsClass.newInstance();
+  		} catch (Exception e) {
+  			e.printStackTrace();
+  		}
+  		return servicePortInstance;
+  	}
 }

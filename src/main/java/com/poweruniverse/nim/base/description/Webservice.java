@@ -35,8 +35,11 @@ public abstract class Webservice {
 		return "http://"+ip+":"+port+"/ws/"+component.getName()+"/"+name+"?wsdl";
 	}
 
+	public abstract Object getServiceInstance() throws Exception ;
+	
 	public abstract Method getMethod(String mtdName) throws Exception ;
 
+		
 	public String toString() {
 		return this.getComponent().getName()+"."+this.getName();
 	}
