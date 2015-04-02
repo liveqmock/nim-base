@@ -45,8 +45,12 @@ public class JSONDataResult implements Result {
 		this.rows.add(row);
 	}
 	
-	public NimJSONArray getRows(){
-		return this.rows;
+	public JSONArray getRows(){
+		return this.rows.getJSON();
+	}
+	
+	public void setRows(JSONArray rows){
+		this.rows = new NimJSONArray(rows);
 	}
 	
 
@@ -54,8 +58,16 @@ public class JSONDataResult implements Result {
 		return success;
 	}
 
+	public void setSuccess(boolean success) {
+		this.success = success ;
+	}
+
 	public String getErrorMsg() {
 		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
 	}
 
 	public int getTotalCount() {

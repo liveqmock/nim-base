@@ -1,5 +1,7 @@
 package com.poweruniverse.nim.base.message;
 
+import net.sf.json.JSONObject;
+
 import com.poweruniverse.nim.base.utils.NimJSONObject;
 
 
@@ -37,6 +39,18 @@ public class JSONMessageResult implements Result {
 		return this.info.get(key);
 	}
 	
+	public Integer getInt(String key){
+		return this.info.getInt(key);
+	}
+	
+	public String getString(String key){
+		return this.info.getString(key);
+	}
+	
+	public NimJSONObject getJSONObject(String key){
+		return this.info.getJSONObject(key);
+	}
+	
 	public boolean has(String key){
 		return this.info.has(key);
 	}
@@ -55,6 +69,14 @@ public class JSONMessageResult implements Result {
 
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
+	}
+
+	public void setInfo(JSONObject obj) {
+		this.info = new NimJSONObject(obj);
+	}
+
+	public JSONObject getInfo() {
+		return this.info.getJSON();
 	}
 
 	public String toString() {

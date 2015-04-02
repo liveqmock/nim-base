@@ -27,8 +27,11 @@ public class UserInfo {
 		this.ip = ip;
 
 		this.key = ""+Calendar.getInstance().getTimeInMillis();
-		this.dengLuDHIdentifier = Encrypt.encrypt(this.dengLuDH, this.key);
-		this.dengLuMMIdentifier = Encrypt.encrypt(this.dengLuMM, this.key);
+		try {
+			this.dengLuDHIdentifier = Encrypt.desEncrypt(this.dengLuDH, this.key);
+			this.dengLuMMIdentifier = Encrypt.desEncrypt(this.dengLuMM, this.key);
+		} catch (Exception e) {
+		}
 	}
 
 	public Integer getYongHuDM() {

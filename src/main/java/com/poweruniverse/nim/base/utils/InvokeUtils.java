@@ -21,7 +21,7 @@ import com.poweruniverse.nim.base.description.RemoteWebservice;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
 import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.Result;
-import com.poweruniverse.nim.baseClass.BasePlateformWebservice;
+import com.poweruniverse.nim.base.webservice.AbstractWebservice;
 
 public class InvokeUtils {
 	private static Logger logger = null;
@@ -71,7 +71,7 @@ public class InvokeUtils {
 				//加入当前调用信息
 				BindingProvider provider = (BindingProvider)servicePortInstance;  
 				//加入当前用户信息 用于目标服务不信任源情况下 重新进行用户验证的情况
-				provider.getRequestContext().put(BasePlateformWebservice.ENCRYPT_KEY_PROPERTY, invokeEnvelope.getInvokeUser().getKey());
+				provider.getRequestContext().put(AbstractWebservice.ENCRYPT_KEY_PROPERTY, invokeEnvelope.getInvokeUser().getKey());
 				provider.getRequestContext().put(BindingProvider.USERNAME_PROPERTY, invokeEnvelope.getInvokeUser().getDengLuDHIdentifier());
 				provider.getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, invokeEnvelope.getInvokeUser().getDengLuMMIdentifier());
 				//用客户端传递来的参数 调用webservice方法

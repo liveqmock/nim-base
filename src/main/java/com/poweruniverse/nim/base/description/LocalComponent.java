@@ -4,15 +4,26 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.ws.Endpoint;
 
-import org.apache.commons.io.FileUtils;
-
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.FileUtils;
+
 import com.poweruniverse.nim.base.bean.UserInfo;
+import com.poweruniverse.nim.base.utils.StringUtils;
+import com.poweruniverse.nim.base.webservice.AbstractWebservice;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.utility.StringUtil;
 
 /**
  * 对某个local组件的描述
@@ -78,7 +89,7 @@ public class LocalComponent extends Component {
 					System.out.println("成功");
 					
 					//根据组件级别和当前系统运行模式，确定是否可以生成webservice 客户端源码
-					if("127.0.0.1".equals(app.getIp()) && "8080".equals(app.getPort())){
+					if("127.0.0.1".equals(app.getIp()) ){
 						if(("plateform".equals(this.type) && app.isPlateformMode()) || ("application".equals(this.type) && app.isDevelopMode())){
 							generateClientCode(url,wsName);
 			        	}	
@@ -88,6 +99,43 @@ public class LocalComponent extends Component {
 					System.err.println("失败");
 					e.printStackTrace();
 				}
+			}
+			//生成客户端代码的utils文件
+			if("127.0.0.1".equals(app.getIp()) ){
+				if(("plateform".equals(this.type) && app.isPlateformMode()) || ("application".equals(this.type) && app.isDevelopMode())){
+					String[] cmpNames = this.getName().split("-");
+					String fileName = "";
+					for(int i=0;i<cmpNames.length;i++){
+						fileName+=StringUtils.capFirst(cmpNames[i]);
+					}
+					fileName += "ClientUtils";
+					File cmpWSClientSrcPathFile = new File(this.clientSrcPath+this.clientPackage.replaceAll("\\.", "/")+"/utils/"+fileName+".java");
+					if(!cmpWSClientSrcPathFile.exists()){
+						List<String[] > services = new ArrayList<String[]>();
+						for(String wsName: this.getWebserviceKeySet()){
+							LocalWebservice webservice = this.getWebservice(wsName);
+							String simpleClassName = webservice.getServiceClass().substring(webservice.getServiceClass().lastIndexOf(".")+1);
+//							serviceClasses.add(this.clientPackage+"."+webservice.getName()+"."+simpleClassName);
+							String[] service= {webservice.getName(),simpleClassName};
+							services.add(service);
+						}
+						Map<String, Object> root = new HashMap<String, Object>();
+						root.put("componentName", this.getName());
+						root.put("className", fileName);
+						root.put("clientPackage", this.clientPackage);
+						root.put("services", services);
+						
+						Configuration freemarkerCfg = new Configuration();
+						freemarkerCfg.setClassForTemplateLoading(AbstractWebservice.class,"");
+						Template WebserviceClientUtilsTemplate = freemarkerCfg.getTemplate("WebserviceClientUtils.ftl");
+						WebserviceClientUtilsTemplate.setEncoding("UTF-8");
+						
+						StringWriter writer = new StringWriter();
+						WebserviceClientUtilsTemplate.process(root, writer);
+						String fileContent = writer.toString();
+						FileUtils.writeStringToFile(cmpWSClientSrcPathFile,fileContent);
+					}
+	        	}	
 			}
 //			System.out.println("发布组件("+this.getName()+")...成功");
 		} catch (Exception e) {

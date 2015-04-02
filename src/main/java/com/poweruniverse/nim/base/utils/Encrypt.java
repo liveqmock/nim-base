@@ -151,13 +151,13 @@ public class Encrypt {
 	   * @author <a href="mailto:leo841001@163.com">LiGuoQing</a>  
 	   */
 	  public static byte[] hexStr2ByteArr(String strIn) throws Exception {
-	    byte[] arrB = strIn.getBytes();
+	    byte[] arrB = strIn.getBytes("utf-8");
 	    int iLen = arrB.length;
 
 	    // 两个字符表示一个字节，所以字节数组长度是字符串长度除以2   
 	    byte[] arrOut = new byte[iLen / 2];
 	    for (int i = 0; i < iLen; i = i + 2) {
-	      String strTmp = new String(arrB, i, 2);
+	      String strTmp = new String(arrB, i, 2,"utf-8");
 	      arrOut[i / 2] = (byte) Integer.parseInt(strTmp, 16);
 	    }
 	    return arrOut;
@@ -193,7 +193,7 @@ public class Encrypt {
 	  public static byte[] desEncrypt(byte[] arrB,String strKey) throws Exception {
 		  
 		Security.addProvider(new com.sun.crypto.provider.SunJCE());
-		Key key = getKey(strKey.getBytes());
+		Key key = getKey(strKey.getBytes("utf-8"));
 
 		Cipher encryptCipher = Cipher.getInstance("DES");
 		encryptCipher.init(Cipher.ENCRYPT_MODE, key);
@@ -210,7 +210,7 @@ public class Encrypt {
 	   * @throws Exception  
 	   */
 	  public static String desEncrypt(String strIn,String key) throws Exception {
-	    return byteArr2HexStr(desEncrypt(strIn.getBytes(),key));
+	    return byteArr2HexStr(desEncrypt(strIn.getBytes("utf-8"),key));
 	  }
 
 	  /**  
@@ -223,7 +223,7 @@ public class Encrypt {
 	   */
 	  public static byte[] desDecrypt(byte[] arrB,String strKey) throws Exception {
 		Security.addProvider(new com.sun.crypto.provider.SunJCE());
-		Key key = getKey(strKey.getBytes());
+		Key key = getKey(strKey.getBytes("utf-8"));
 
 		Cipher decryptCipher = Cipher.getInstance("DES");
 		decryptCipher.init(Cipher.DECRYPT_MODE, key);
@@ -239,7 +239,7 @@ public class Encrypt {
 	   * @throws Exception  
 	   */
 	  public static String desDecrypt(String strIn,String strKey) throws Exception {
-		  return new String(desDecrypt(hexStr2ByteArr(strIn),strKey));
+		  return new String(desDecrypt(hexStr2ByteArr(strIn),strKey),"utf-8");
 	  }
 
 	  /**  
@@ -265,16 +265,20 @@ public class Encrypt {
 
 	  /**
 	   * main方法  。
-	   * @author 刘尧兴
 	   * @param args
 	   */
 	  public static void main(String[] args) {
 	    try {
-	      String test = "123456789";
-	      System.out.println("加密前的字符：" + test);
-	      System.out.println("加密后的字符：" + Encrypt.desEncrypt(test,"aa"));
-	      System.out.println("解密后的字符：" + Encrypt.desDecrypt(Encrypt.desEncrypt(test,"aa"),"aa"));
-	      
+		      String test = "123456789";
+		      System.out.println("加密前的字符：" + test);
+		      System.out.println("加密后的字符：" + Encrypt.desEncrypt(test,"aa"));
+		      System.out.println("解密后的字符：" + Encrypt.desDecrypt(Encrypt.desEncrypt(test,"aa"),"aa"));
+		      
+		      String test2 = "admin";
+		      System.out.println("加密前的字符：" + test2);
+		      System.out.println("加密后的字符：" + Encrypt.desEncrypt(test2,"1427788323847"));
+		      System.out.println("解密后的字符：" + Encrypt.desDecrypt(Encrypt.desEncrypt(test2,"1427788323847"),"1427788323847"));
+		      
 	    }
 	    catch (Exception e) {
 	      e.printStackTrace();

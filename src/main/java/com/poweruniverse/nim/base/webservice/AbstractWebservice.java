@@ -1,4 +1,7 @@
-package com.poweruniverse.nim.baseClass;
+package com.poweruniverse.nim.base.webservice;
+
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
@@ -8,6 +11,7 @@ import net.sf.json.JSONObject;
 import com.poweruniverse.nim.base.bean.UserInfo;
 import com.poweruniverse.nim.base.message.InvokeEnvelope;
 import com.poweruniverse.nim.base.message.JSONDataResult;
+import com.poweruniverse.nim.base.message.JSONMessageResult;
 import com.poweruniverse.nim.base.message.Result;
 import com.poweruniverse.nim.base.utils.Encrypt;
 import com.poweruniverse.nim.base.utils.InvokeUtils;
@@ -15,14 +19,14 @@ import com.poweruniverse.nim.base.utils.NimJSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 
-public abstract class BasePlateformWebservice {
+public abstract class AbstractWebservice {
 	public static final String ENCRYPT_USER_PROPERTY = "ws_auth_user";
 	public static final String ENCRYPT_PASSWORD_PROPERTY = "ws_auth_password";
 	public static final String ENCRYPT_KEY_PROPERTY = "ws_auth_key";
 
 	protected UserInfo userInfo = null;
 
-	public BasePlateformWebservice() {
+	public AbstractWebservice() {
 		super();
 	}
 
@@ -34,30 +38,38 @@ public abstract class BasePlateformWebservice {
 			}
 		}else{
 			MessageContext mc = wsContext.getMessageContext(); 
-			Object codeIdentifier = mc.get(ENCRYPT_USER_PROPERTY);
-			Object pwdIdentifier = mc.get(ENCRYPT_PASSWORD_PROPERTY);
-			Object key = mc.get(ENCRYPT_KEY_PROPERTY);
+			@SuppressWarnings("unchecked")
+			Map<String, List<String>> http_headers = (Map<String, List<String>>) mc.get(  MessageContext.HTTP_REQUEST_HEADERS);
+
+			String userIdentifier = null;
+			String pwdIdentifier =  null;
+			String key =  null;
+			if(http_headers!=null){
+				List<String> userList = (List<String>)http_headers.get(ENCRYPT_USER_PROPERTY);
+				List<String> passwordList = (List<String>)http_headers.get(ENCRYPT_PASSWORD_PROPERTY);
+				List<String> keyList = (List<String>)http_headers.get(ENCRYPT_KEY_PROPERTY);
+				userIdentifier = userList.get(0);
+				pwdIdentifier = passwordList.get(0);
+				key = keyList.get(0);
+			}
 			
-			if(codeIdentifier!=null && pwdIdentifier!=null&& key!=null){
-				String userCode = Encrypt.encrypt(codeIdentifier.toString(),key.toString());
-				String userPwd = Encrypt.encrypt(pwdIdentifier.toString(),key.toString());
+			if(userIdentifier!=null && pwdIdentifier!=null && key!=null){
+				String userCode = Encrypt.desDecrypt(userIdentifier,key);
+				String userPwd = Encrypt.desDecrypt(pwdIdentifier.toString(),key);
 				
 				//调用nim-data 服务的userAuth方法 （）取得用户代码
 				JSONObject paramter = new JSONObject();
-				paramter.put("dengLuDH", userCode);
-				paramter.put("dengLuMM", userPwd);
+				paramter.put("userName", userCode);
+				paramter.put("userPassword", userPwd);
+				paramter.put("clientIP", getClientIP(wsContext));
 				
-				try {
-					InvokeEnvelope invokeEnvelope = new InvokeEnvelope("nim-base", null, "nim-data", "verify", "userAuth", paramter);
-					Result result = InvokeUtils.invokeService(invokeEnvelope);
-					if(result.isSuccess()){
-						JSONDataResult jResult = (JSONDataResult)result;
-						NimJSONObject row = jResult.getRows().getJSONObject(0);
-						yongHuDM = row.getInt("yongHuDM");
-					}else if(forceExists){
-						throw new Exception(result.getErrorMsg());
-					}
-				} catch (Exception e) {
+				InvokeEnvelope invokeEnvelope = new InvokeEnvelope("nim-plateform", null, "nim-data", "verify", "userAuth", paramter);
+				Result result = InvokeUtils.invokeService(invokeEnvelope);
+				if(result.isSuccess()){
+					JSONMessageResult jResult = (JSONMessageResult)result;
+					yongHuDM =  jResult.getInt("yongHuDM");
+				}else if(forceExists){
+					throw new Exception(result.getErrorMsg());
 				}
 				
 			}else if(forceExists){
